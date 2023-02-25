@@ -44,24 +44,31 @@
         [:div
          (doall (for [n (range (count @guesslist))]
                   (button-row  n)))]]
-       [:div {:style {:width "200px"}}
-        [:div {:style {:width "50%" :float :left}}
-         "eliminators"
-         [:br]
-         (suggestion-list (->>  @constraints
-                                :eliminators
-                                (take 60)
-                                (map first)))]
-        [:div {:width "50%" :float :right}
-         "all"
-         [:br]
-         (suggestion-list (->>  @constraints
-                                :all
-                                (take 60)))]]
+       [:table
+        [:thead
+         [:td {:width "60px"}"eliminators"]
+         [:td {:width "60px"}"   best    "]
+         [:td {:width "60px"} "    all     "]]
+        [:tbody
+         [:tr
+          [:td
+            (suggestion-list (->>  @constraints
+                                   :eliminators
+                                   (take 60)
+                                   (map first)))]
+          [:td
+            (suggestion-list (->>  @constraints
+                                   :best
+                                   (take 60)
+                                   (map first)))]
+          [:td
+            (suggestion-list (->>  @constraints
+                                   :all
+                                   (take 60)))]]]]
 
 
        [:div
-        [:p (str (count (:all @constraints)) " words possible.")]
-        [:button {:on-click #(re-frame/dispatch [::events/initialize-db])} "Reset"]]])))
+         [:p (str (count (:all @constraints)) " words possible.")]
+         [:button {:on-click #(re-frame/dispatch [::events/initialize-db])} "Reset"]]])))
 
 

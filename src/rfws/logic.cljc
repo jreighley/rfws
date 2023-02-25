@@ -80,7 +80,7 @@
                                 {ch (count (-> possblelist
                                              (n (str ch))))}))
         word-elim (fn [w] {w (reduce + (map #(get char-elim %) w))})]
-    (take 20 (sort-by val (reduce conj (map word-elim  (unique-letters possblelist)))))))
+    (take 60 (sort-by val (reduce conj (map word-elim  (unique-letters possblelist)))))))
 
 (defn best-words "tries to find the word with the most common letter per column"
   [wl]
@@ -92,7 +92,7 @@
     (let [[p l] (first vv)]
       (recur  (f al  l p) f (rest vv)))))
 
-(defn process-constraint-list [answers {:keys [absent misplaced correct] :as m}]
+(defn process-constraint-list [answers {:keys [absent misplaced correct] }]
   (-> answers
       (n absent)
       (apply-position-constraint n (reverse misplaced))

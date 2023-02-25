@@ -28,7 +28,6 @@
   (fn [db]
     (let [gl (:guess-list db)
           dl (:default-wordlist db)
-          xf logic/eliminators
           ts (:tile-statuses db)
           letter-pairs (map-indexed vector (apply str gl))
           tiles   (take (count letter-pairs) ts)
@@ -38,4 +37,5 @@
                        (logic/merge-absents)
                        (logic/process-constraint-list dl))]
       {:eliminators (logic/eliminators possible)
+       :best (logic/best-words possible)
        :all possible})))
