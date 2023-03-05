@@ -92,7 +92,7 @@
     (let [[p l] (first vv)]
       (recur  (f al  l p) f (rest vv)))))
 
-(defn process-constraint-list [answers {:keys [absent misplaced correct] }]
+(defn process-constraint-list [answers {:keys [absent misplaced correct]}]
   (-> answers
       (n absent)
       (apply-position-constraint n (reverse misplaced))
@@ -112,7 +112,6 @@
    (reduce-tiles {:undefined [] :absent [] :correct [] :misplaced []} tl))
   ([acc tl]
    (let [tile (-> (first tl))
-
          status (second tile)]
      (if (empty? tl)
        acc
@@ -122,9 +121,11 @@
 (comment
   (->> (process-constraint-list
          answers
-         {:absent "irtmbluson"
-          :correct [ [4 "e"]]
-          :misplaced [[0 "a"] [2 "a"]]})
+         {:absent "raemnbwd"
+          :correct [ [`0 "i" ] [3 "t" ] [4 "y"]]
+          :misplaced []})
        #_(eliminators)))
 
 
+(defn freq-by-n [wl]
+  (zipmap (range 5)(map #(find-likely wl %) (range  5))))

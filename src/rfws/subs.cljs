@@ -24,6 +24,21 @@
     (:tile-statuses db)))
 
 (re-frame/reg-sub
+  ::guess-legal?
+  (fn [db]
+    (and (= 5 (count (:pending-guess db)))
+         (or (contains? (:legal-words db)
+                        (:pending-guess db))
+             (contains? (:default-wordlist db)
+                        (:pending-guess db))))))
+
+
+(re-frame/reg-sub
+  ::pending-guess
+  (fn [db]
+    (:pending-guess db)))
+
+(re-frame/reg-sub
   ::constraints
   (fn [db]
     (let [gl (:guess-list db)
@@ -38,4 +53,7 @@
                        (logic/process-constraint-list dl))]
       {:eliminators (logic/eliminators possible)
        :best (logic/best-words possible)
-       :all possible})))
+       :all possible
+       :frequencies (frequencies (apply str possible))
+       :freq-by-n (logic/freq-by-n possible)})))
+

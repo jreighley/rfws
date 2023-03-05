@@ -41,4 +41,18 @@
  (fn-traced [_ _]
    db/default-db))
 
+(re-frame/reg-event-db
+  ::set-pending-guess
+  (fn [db [_ pending-guess]]
+    (-> db
+        (assoc :pending-guess pending-guess))))
+
+(re-frame/reg-event-db
+  ::submit-text-guess
+  (fn [db [_ _]]
+    (-> db
+        (assoc :guess-list (conj (:guess-list db) (str (:pending-guess db))))
+        (dissoc :pending-guess))))
+
+
 

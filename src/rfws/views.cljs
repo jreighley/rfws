@@ -28,22 +28,38 @@
    [:br]])
 
 (defn suggestion-list [sug-list]
-  [:select {:name "Suggestions" :size 20}
+  [:select {:name "Suggestions" :size 20 :style {:width "60px"}}
    (for [option sug-list]
      [:option {:key (str "suggestion-" option)
                :on-double-click #(re-frame/dispatch [::events/add-guess  option])}
       option])])
+;(defn ad-hoc-guess []
+;  ()
+;  [:form
+;   [:input {:on-change #(re-frame/dispatch [:new-guess (.-value (.-target %))])}]
+;   [:button {:enabled? (re-find #"\b[a-z]{5}\b" @adhocguess)} "Submit"]])
 
 (defn main-panel []
   (let [constraints (re-frame/subscribe [::subs/constraints])
-        guesslist (re-frame/subscribe [::subs/guess-list])]
+        guesslist (re-frame/subscribe [::subs/guess-list])
+        pending-guess (re-frame/subscribe [::subs/pending-guess])
+        legal-guess  (re-frame/subscribe [::subs/guess-legal?])]
     (fn []
       [:div
        [:h1
-        "wordle solver"
+        "Wordle Calculator"
         [:div
          (doall (for [n (range (count @guesslist))]
                   (button-row  n)))]]
+       [:form {:onSubmit (fn [e] (do (.preventDefault e)
+                                     (identity false)))}
+        [:input {:value @pending-guess
+                 :on-change #(re-frame/dispatch [::events/set-pending-guess (-> % .-target .-value)])}]
+        [:button
+         {:disabled (if @legal-guess false true)
+          :on-click #(re-frame/dispatch [::events/submit-text-guess @pending-guess])}
+         "Submit"]]
+
        [:table
         [:thead
          [:td {:width "60px"}"eliminators"]
@@ -64,11 +80,12 @@
           [:td
             (suggestion-list (->>  @constraints
                                    :all
-                                   (take 60)))]]]]
-
+                                   (take 2400)))]]]]
 
        [:div
          [:p (str (count (:all @constraints)) " words possible.")]
-         [:button {:on-click #(re-frame/dispatch [::events/initialize-db])} "Reset"]]])))
+         [:button {:on-click #(re-frame/dispatch [::events/initialize-db])} "Reset"]
+         #_[:div (str (reverse (sort-by val (:frequencies @constraints))))]
+         #_[:div (str (:freq-by-n @constraints))]]])))
 
 
