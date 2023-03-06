@@ -22,7 +22,7 @@
                   :on-click #(re-frame/dispatch [::events/change-status letter-index])}
          (str (.toUpperCase letter))]))
 
-(defn button-row [ n]
+(defn button-row [n]
   [:div {:key (str "br-" n)}
    (doall (map #(make-button  n %)(range 5)))
    [:br]])
@@ -53,7 +53,8 @@
                   (button-row  n)))]]
        [:form {:onSubmit (fn [e] (do (.preventDefault e)
                                      (identity false)))}
-        [:input {:value @pending-guess
+        [:input {:auto-focus true
+                 :value @pending-guess
                  :on-change #(re-frame/dispatch [::events/set-pending-guess (-> % .-target .-value)])}]
         [:button
          {:disabled (if @legal-guess false true)

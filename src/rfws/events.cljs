@@ -44,8 +44,9 @@
 (re-frame/reg-event-db
   ::set-pending-guess
   (fn [db [_ pending-guess]]
-    (-> db
-        (assoc :pending-guess pending-guess))))
+    (if (<  (count pending-guess) 6)
+      (-> db
+        (assoc :pending-guess pending-guess)))))
 
 (re-frame/reg-event-db
   ::submit-text-guess
