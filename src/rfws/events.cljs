@@ -49,6 +49,23 @@
         (assoc :pending-guess pending-guess)))))
 
 (re-frame/reg-event-db
+  ::toggle-colors
+  (fn [db [_ _]]
+    (let [current-color (:color-scheme db)
+          new-color (->> #{:high-contrast :dark}
+                         (remove #(= current-color %))
+                         first)]
+      (-> db
+          (assoc :color-scheme new-color)))))
+
+(re-frame/reg-event-db
+  ::toggle-answerlist
+  (fn [db [_ _]]
+    (let [new-answerlist (conj (vec (rest (:answer-list db))) (first (:answer-list db)))]
+      (-> db
+          (assoc :answer-list new-answerlist)))))
+
+(re-frame/reg-event-db
   ::submit-text-guess
   (fn [db [_ _]]
     (-> db

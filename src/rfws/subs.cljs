@@ -39,10 +39,20 @@
     (:pending-guess db)))
 
 (re-frame/reg-sub
+  ::color-scheme
+  (fn [db]
+    (:color-scheme db)))
+
+(re-frame/reg-sub
+  ::answer-list-cycle
+  (fn [db]
+    (:answer-list db)))
+
+(re-frame/reg-sub
   ::constraints
   (fn [db]
     (let [gl (:guess-list db)
-          dl (:default-wordlist db)
+          dl ((first (:answer-list db)) db)
           ts (:tile-statuses db)
           letter-pairs (map-indexed vector (apply str gl))
           tiles   (take (count letter-pairs) ts)
