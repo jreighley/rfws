@@ -46,7 +46,7 @@
   (fn [db [_ pending-guess]]
     (if (<  (count pending-guess) 6)
       (-> db
-        (assoc :pending-guess pending-guess)))))
+        (assoc :pending-guess (.toLowerCase pending-guess))))))
 
 (re-frame/reg-event-db
   ::toggle-colors
